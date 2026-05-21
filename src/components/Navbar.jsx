@@ -7,7 +7,6 @@ import { MdKeyboard } from 'react-icons/md'
 const navLinks = [
   { label: 'Home', to: '/' },
   { label: 'Tests', to: '/tests' },
-  { label: 'Practice', to: '/tests' },
   { label: 'Stats', to: '/stats' },
   { label: 'How to Type', to: '/how-to-type' },
   { label: 'About', to: '/about' },
@@ -57,8 +56,9 @@ export default function Navbar() {
             {/* Desktop Nav Links */}
             <div className="hidden md:flex items-center gap-1">
               {navLinks.map((link) => {
-                const isActive = location.pathname === link.to ||
-                  (link.to !== '/' && location.pathname.startsWith(link.to))
+                const isActive = link.label === 'Tests'
+                  ? (location.pathname === '/tests' || location.pathname.startsWith('/test/'))
+                  : location.pathname === link.to || (link.to !== '/' && location.pathname.startsWith(link.to))
                 return (
                   <Link
                     key={link.label}

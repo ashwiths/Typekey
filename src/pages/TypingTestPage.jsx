@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import Navbar from '../components/Navbar'
@@ -40,6 +40,14 @@ function fireConfetti() {
   }
 }
 
+const DIFF_BADGES = {
+  Beginner: 'bg-emerald-50 text-emerald-700 border border-emerald-200/80',
+  Easy: 'bg-sky-50 text-sky-700 border border-sky-200/80',
+  Medium: 'bg-amber-50 text-amber-700 border border-amber-200/80',
+  Hard: 'bg-orange-50 text-orange-700 border border-orange-200/80',
+  Expert: 'bg-red-50 text-red-700 border border-red-200/80',
+}
+
 export default function TypingTestPage() {
   const { id } = useParams()
   const testId = parseInt(id, 10)
@@ -50,33 +58,11 @@ export default function TypingTestPage() {
   const [liveStats, setLiveStats] = useState({ wpm: 0, accuracy: 100, mistakes: 0, elapsed: 0, pressedKey: '', nextKey: '' })
   const [result, setResult] = useState(null)
 
-  if (!test) {
-    return (
-      <div className="page-wrapper">
-        <Navbar />
-        <div className="flex items-center justify-center min-h-[60vh] flex-col gap-4">
-          <p className="text-2xl font-bold text-gray-900">Test not found</p>
-          <Link to="/tests" className="btn-primary">Back to Tests</Link>
-        </div>
-      </div>
-    )
-  }
-
-  if (isTestLocked(testId)) {
-    return (
-      <div className="page-wrapper">
-        <Navbar />
-        <div className="flex items-center justify-center min-h-[60vh] flex-col gap-4 px-6 text-center">
-          <div className="text-5xl">🔒</div>
-          <p className="text-2xl font-bold text-gray-900">Test Locked</p>
-          <p className="text-gray-500">Complete Test {testId - 1} first to unlock this test.</p>
-          <Link to={`/test/${testId - 1}`} className="btn-primary flex items-center gap-2">
-            Go to Test {testId - 1} <FiArrowRight />
-          </Link>
-        </div>
-      </div>
-    )
-  }
+  // Reset page state whenever the level ID changes to ensure clean navigation
+  useEffect(() => {
+    setResult(null)
+    setLiveStats({ wpm: 0, accuracy: 100, mistakes: 0, elapsed: 0, pressedKey: '', nextKey: '' })
+  }, [testId])
 
   const handleComplete = useCallback((res) => {
     setResult(res)
@@ -96,19 +82,51 @@ export default function TypingTestPage() {
     return `${m}m ${sec}s`
   }
 
+  if (!test) {
+    return (
+      <div className="page-wrapper">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[60vh] flex-col gap-4">
+          <p className="text-2xl font-bold text-gray-900">Test not found</p>
+          <Link to="/tests" className="btn-primary">Back to Tests</Link>
+        </div>
+      </div>
+    )
+  }
+
+  if (isTestLocked(testId)) {
+    return (
+      <div className="page-wrapper">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[65vh] flex-col gap-5 px-6 text-center">
+          <div className="text-6xl animate-bounce">🔒</div>
+          <p className="text-2xl font-bold text-gray-900 tracking-tight">Test Locked</p>
+          <p className="text-gray-500 max-w-sm">Complete Test {testId - 1} first to unlock this practice session.</p>
+          <Link to={`/test/${testId - 1}`} className="btn-primary flex items-center gap-2 px-8 py-3.5 shadow-[0_10px_25px_rgba(212,105,58,0.25)]">
+            Go to Test {testId - 1} <FiArrowRight />
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper relative overflow-hidden">
       <Navbar />
 
-      <div className="max-w-4xl mx-auto px-6 lg:px-8 pt-24 pb-16">
+      {/* ── Background Ambient Blobs ── */}
+      <div className="fixed top-0 right-0 w-[550px] h-[450px] bg-peach-100/25 rounded-full blur-[130px] pointer-events-none -z-10" />
+      <div className="fixed bottom-0 left-0 w-[450px] h-[350px] bg-amber-50/30 rounded-full blur-[110px] pointer-events-none -z-10" />
+
+      <div className="max-w-4xl mx-auto px-6 lg:px-8 pt-20 pb-12">
         {/* Back + Test info */}
-        <div className="flex items-center justify-between mb-8">
-          <Link to="/tests" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors">
-            <FiArrowLeft className="w-4 h-4" /> All Tests
+        <div className="flex items-center justify-between mb-4">
+          <Link to="/tests" className="group flex items-center gap-1.5 text-[13px] font-bold text-gray-400 hover:text-peach-600 transition-colors uppercase tracking-wider">
+            <FiArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to path
           </Link>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-500">Test {testId} of {TESTS.length}</span>
-            <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${DIFFICULTY_COLORS[test.difficulty]}`}>
+            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Level {testId} of {TESTS.length}</span>
+            <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${DIFF_BADGES[test.difficulty] || 'bg-gray-100 text-gray-600'}`}>
               {test.difficulty}
             </span>
           </div>
@@ -116,21 +134,22 @@ export default function TypingTestPage() {
 
         {/* Test header */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          transition={{ duration: 0.5 }}
+          className="mb-5"
         >
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-1">
             {test.name}
           </h1>
-          <p className="text-gray-500">{test.description}</p>
+          <p className="text-gray-500 text-sm leading-relaxed">{test.description}</p>
         </motion.div>
 
         {/* Typing area */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.08, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           <TypingArea
             key={testId}
@@ -142,12 +161,15 @@ export default function TypingTestPage() {
 
         {/* Keyboard visualizer */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mt-8"
+          transition={{ delay: 0.16, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-6"
         >
-          <p className="text-xs text-gray-400 font-medium mb-3 uppercase tracking-wider">Keyboard</p>
+          <div className="flex items-center gap-1.5 mb-2.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-peach-500 animate-pulse" />
+            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Active Visualizer</p>
+          </div>
           <KeyboardVisualizer
             pressedKey={liveStats.pressedKey}
             nextKey={liveStats.nextKey}
@@ -155,70 +177,105 @@ export default function TypingTestPage() {
         </motion.div>
       </div>
 
-      {/* Completion Modal */}
+      {/* ── Completion Modal ── */}
       <AnimatePresence>
         {result && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm"
+            transition={{ duration: 0.16, ease: 'easeOut' }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/25 backdrop-blur-md"
             onClick={(e) => e.target === e.currentTarget && setResult(null)}
           >
             <motion.div
-              initial={{ scale: 0.85, opacity: 0, y: 40 }}
+              initial={{ scale: 0.92, opacity: 0, y: 15 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: 'spring', damping: 20, stiffness: 200 }}
-              className="bg-white rounded-4xl shadow-soft-xl p-10 max-w-md w-full text-center"
+              exit={{ scale: 0.94, opacity: 0 }}
+              transition={{ type: 'spring', damping: 22, stiffness: 320 }}
+              className="bg-white/80 backdrop-blur-3xl rounded-4xl shadow-[0_25px_60px_rgba(0,0,0,0.18),inset_0_1.5px_0_rgba(255,255,255,1)] p-8 md:p-10 max-w-md w-full text-center border border-white relative overflow-hidden"
             >
+              {/* Modal decorative glow */}
+              <div className="absolute -top-12 -right-12 w-32 h-32 bg-peach-100/40 rounded-full blur-2xl pointer-events-none" />
+
               <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: 'spring', stiffness: 250 }}
-                className="w-16 h-16 bg-peach-100 rounded-full flex items-center justify-center mx-auto mb-6"
+                initial={{ scale: 0, rotate: -15 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.04, type: 'spring', stiffness: 300 }}
+                className="w-16 h-16 bg-gradient-to-br from-peach-100 to-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-soft border border-peach-200/50"
               >
-                <MdEmojiEvents className="w-8 h-8 text-peach-600" />
+                <MdEmojiEvents className="w-9 h-9 text-peach-600" />
               </motion.div>
 
-              <h2 className="text-2xl font-bold text-gray-900 mb-1">Test Complete! 🎉</h2>
-              <p className="text-gray-500 mb-8">{test.name} — Level {testId}</p>
+              <h2 className="text-2xl font-black text-gray-900 tracking-tight mb-0.5">Test Complete! 🎉</h2>
+              <p className="text-sm font-semibold text-peach-600 mb-6">{test.name} — Level {testId}</p>
 
-              <div className="grid grid-cols-2 gap-4 mb-8">
+              {/* Dynamic Stats Grid */}
+              <div className="grid grid-cols-2 gap-3 mb-6">
                 {[
-                  { label: 'WPM', value: result.wpm, icon: <BsLightningChargeFill className="w-4 h-4 text-peach-500" /> },
-                  { label: 'Accuracy', value: `${result.accuracy}%`, icon: <FiCheckCircle className="w-4 h-4 text-emerald-500" /> },
-                  { label: 'Mistakes', value: result.mistakes, icon: '✗' },
-                  { label: 'Time', value: formatTime(result.time), icon: '⏱' },
-                ].map(({ label, value, icon }) => (
-                  <div key={label} className="bg-gray-50 rounded-2xl p-4">
-                    <div className="flex items-center gap-1.5 mb-1 justify-center">{icon}
-                      <span className="text-xs text-gray-500">{label}</span>
+                  {
+                    label: 'Speed',
+                    value: result.wpm,
+                    unit: 'WPM',
+                    icon: <BsLightningChargeFill className="w-3.5 h-3.5 text-peach-500" />,
+                    bg: 'bg-peach-50/20 border-peach-100/50',
+                    color: 'text-peach-600'
+                  },
+                  {
+                    label: 'Accuracy',
+                    value: `${result.accuracy}%`,
+                    unit: '',
+                    icon: <FiCheckCircle className="w-3.5 h-3.5 text-emerald-500" />,
+                    bg: 'bg-emerald-50/20 border-emerald-100/50',
+                    color: 'text-emerald-600'
+                  },
+                  {
+                    label: 'Mistakes',
+                    value: result.mistakes,
+                    unit: 'errors',
+                    icon: <span className="text-red-500 font-bold text-xs">✗</span>,
+                    bg: 'bg-red-50/20 border-red-100/50',
+                    color: 'text-red-600'
+                  },
+                  {
+                    label: 'Time Taken',
+                    value: formatTime(result.time),
+                    unit: '',
+                    icon: <span className="text-amber-600 text-xs">⏱</span>,
+                    bg: 'bg-amber-50/20 border-amber-100/50',
+                    color: 'text-amber-700'
+                  },
+                ].map((stat) => (
+                  <div key={stat.label} className={`border rounded-2xl p-4 text-center ${stat.bg} backdrop-blur-md`}>
+                    <div className="flex items-center gap-1.5 mb-1 justify-center">
+                      {stat.icon}
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{stat.label}</span>
                     </div>
-                    <p className="text-2xl font-bold text-gray-900">{value}</p>
+                    <p className={`text-xl font-black ${stat.color}`}>{stat.value}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="flex flex-col gap-3">
+              {/* Action buttons */}
+              <div className="flex flex-col gap-2.5">
                 {nextTest && (
                   <motion.button
-                    whileHover={{ scale: 1.03 }}
+                    whileHover={{ scale: 1.03, y: -0.5 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => { setResult(null); navigate(`/test/${testId + 1}`) }}
-                    className="btn-primary w-full flex items-center justify-center gap-2 py-3.5"
+                    className="btn-primary w-full flex items-center justify-center gap-2 py-3.5 shadow-[0_6px_20px_rgba(212,105,58,0.25)]"
                   >
                     Next: {nextTest.name} <FiArrowRight />
                   </motion.button>
                 )}
                 <button
                   onClick={() => setResult(null)}
-                  className="btn-secondary w-full py-3"
+                  className="btn-secondary w-full py-3.5"
                 >
                   Try Again
                 </button>
                 <Link to="/tests">
-                  <button className="w-full text-sm text-gray-500 hover:text-gray-700 py-2 transition-colors">
+                  <button className="w-full text-xs font-bold text-gray-400 hover:text-gray-600 py-1.5 uppercase tracking-wider transition-colors mt-1">
                     Back to All Tests
                   </button>
                 </Link>

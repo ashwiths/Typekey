@@ -34,14 +34,8 @@ export default function TestCard({ test, isLocked, isCompleted, result, index })
     ? 'border-emerald-100 shadow-[0_4px_20px_rgba(16,185,129,0.06)] hover:-translate-y-2 hover:shadow-[0_16px_40px_rgba(16,185,129,0.12),0_4px_12px_rgba(0,0,0,0.04)] cursor-pointer'
     : 'border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:-translate-y-2 hover:shadow-[0_16px_40px_rgba(212,105,58,0.1),0_4px_12px_rgba(0,0,0,0.04)] hover:border-peach-100 cursor-pointer'
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.45, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-      className={`${cardBase} ${cardState}`}
-    >
+  const CardContent = () => (
+    <>
       {/* Top accent bar */}
       <div className={`absolute top-0 left-0 right-0 h-[3px] rounded-t-3xl transition-opacity duration-300 ${
         isCompleted
@@ -121,23 +115,51 @@ export default function TestCard({ test, isLocked, isCompleted, result, index })
           </div>
 
           {!isLocked && (
-            <Link to={`/test/${test.id}`}>
-              <motion.button
-                whileHover={{ scale: 1.06, x: 1 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 25 }}
-                className={`flex items-center gap-1.5 text-[13px] font-bold px-4 py-2 rounded-xl transition-all duration-200 ${
-                  isCompleted
-                    ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100'
-                    : 'bg-gradient-to-b from-peach-400 to-peach-500 text-white border border-peach-500 shadow-[0_4px_12px_rgba(212,105,58,0.3)] hover:shadow-[0_6px_16px_rgba(212,105,58,0.4)]'
-                }`}
-              >
-                {isCompleted ? 'Retry' : 'Start'} <FiArrowRight className="w-3.5 h-3.5" />
-              </motion.button>
-            </Link>
+            <motion.div
+              whileHover={{ scale: 1.06, x: 1 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+              className={`flex items-center gap-1.5 text-[13px] font-bold px-4 py-2 rounded-xl transition-all duration-200 ${
+                isCompleted
+                  ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100'
+                  : 'bg-gradient-to-b from-peach-400 to-peach-500 text-white border border-peach-500 shadow-[0_4px_12px_rgba(212,105,58,0.3)]'
+              }`}
+            >
+              {isCompleted ? 'Retry' : 'Start'} <FiArrowRight className="w-3.5 h-3.5" />
+            </motion.div>
           )}
         </div>
       </div>
+    </>
+  )
+
+  if (isLocked) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.45, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
+        className={`${cardBase} ${cardState}`}
+      >
+        <CardContent />
+      </motion.div>
+    )
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.45, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
+      className="h-full"
+    >
+      <Link to={`/test/${test.id}`} className="block h-full">
+        <div className={`${cardBase} ${cardState} h-full`}>
+          <CardContent />
+        </div>
+      </Link>
     </motion.div>
   )
 }
