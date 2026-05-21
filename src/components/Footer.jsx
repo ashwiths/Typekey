@@ -1,85 +1,68 @@
-import { Link } from 'react-router-dom'
-import { MdKeyboard } from 'react-icons/md'
-import { FiTwitter, FiGithub, FiInstagram } from 'react-icons/fi'
-
-const footerLinks = {
-  Product: [
-    { label: 'Tests', to: '/tests' },
-    { label: 'Statistics', to: '/stats' },
-    { label: 'How to Type', to: '/how-to-type' },
-  ],
-  Company: [
-    { label: 'About', to: '/about' },
-    { label: 'Privacy Policy', to: '/' },
-    { label: 'Terms', to: '/' },
-  ],
-}
+import { motion } from 'framer-motion'
+import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi'
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-100 mt-24">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-          {/* Brand */}
-          <div className="md:col-span-2">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 bg-peach-100 rounded-xl flex items-center justify-center">
-                <MdKeyboard className="w-5 h-5 text-peach-600" />
-              </div>
-              <span className="font-poppins font-bold text-lg">
-                Type<span className="text-peach-500">Master</span>
-              </span>
-            </Link>
-            <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
-              15 progressive typing tests designed to improve your speed, accuracy and keyboard confidence — step by step.
+    <footer className="w-full bg-[#f6f3fc]/90 border-t border-[#ebdffc]/50 py-10 relative overflow-hidden">
+      {/* Decorative subtle ambient lights */}
+      <div className="absolute -bottom-10 left-1/4 w-[250px] h-[100px] bg-purple-200/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-10 right-1/4 w-[200px] h-[80px] bg-indigo-200/20 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+          
+          {/* Left Column: Signature & Greeting */}
+          <div className="flex flex-col items-center md:items-start text-center md:text-left">
+            <h4 className="font-['Caveat'] text-[30px] font-bold text-[#c03473] leading-none mb-1 cursor-default hover:scale-105 transition-transform duration-300">
+              Infant Ashil A
+            </h4>
+            <p className="text-[11.5px] text-gray-500 font-medium tracking-wide flex items-center gap-1">
+              Made with <span className="text-[#c03473]">♡</span> and a lot of <span className="text-sm">☕</span>
             </p>
-            <div className="flex gap-3 mt-5">
-              {[
-                { icon: FiTwitter, href: 'https://twitter.com', label: 'Twitter' },
-                { icon: FiGithub, href: 'https://github.com', label: 'GitHub' },
-                { icon: FiInstagram, href: 'https://instagram.com', label: 'Instagram' },
-              ].map(({ icon: Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="w-9 h-9 rounded-xl bg-gray-100 hover:bg-peach-100 flex items-center justify-center text-gray-500 hover:text-peach-600 transition-colors duration-200"
-                >
-                  <Icon className="w-4 h-4" />
-                </a>
-              ))}
-            </div>
           </div>
 
-          {/* Links */}
-          {Object.entries(footerLinks).map(([section, links]) => (
-            <div key={section}>
-              <h4 className="text-sm font-semibold text-gray-900 mb-4">{section}</h4>
-              <ul className="space-y-2.5">
-                {links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      to={link.to}
-                      className="text-sm text-gray-500 hover:text-peach-600 transition-colors duration-200"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+          {/* Center Column: Interactive Circular Social Buttons */}
+          <div className="flex items-center gap-4">
+            {[
+              {
+                icon: <FiGithub className="w-[18px] h-[18px]" />,
+                href: 'https://github.com/ashwiths',
+                label: 'GitHub',
+                color: 'hover:text-gray-900 hover:border-gray-300 hover:bg-gray-50'
+              },
+              {
+                icon: <FiLinkedin className="w-[18px] h-[18px]" />,
+                href: 'https://www.linkedin.com/in/infant-ashil-a-b88a39361/',
+                label: 'LinkedIn',
+                color: 'hover:text-[#0077b5] hover:border-[#0077b5]/30 hover:bg-[#0077b5]/5'
+              },
+              {
+                icon: <FiMail className="w-[18px] h-[18px]" />,
+                href: 'mailto:infantashil55@gmail.com',
+                label: 'Email',
+                color: 'hover:text-[#c03473] hover:border-[#c03473]/30 hover:bg-[#c03473]/5'
+              }
+            ].map(({ icon, href, label, color }) => (
+              <motion.a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                whileHover={{ y: -3, scale: 1.08 }}
+                whileTap={{ scale: 0.95 }}
+                className={`w-11 h-11 rounded-full bg-white border border-[#e8dffc] shadow-[0_4px_12px_rgba(156,117,240,0.08)] flex items-center justify-center text-gray-500 transition-all duration-300 ${color}`}
+              >
+                {icon}
+              </motion.a>
+            ))}
+          </div>
 
-        <div className="mt-12 pt-8 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-xs text-gray-400">
-            © {new Date().getFullYear()} TypeMaster. All rights reserved.
-          </p>
-          <p className="text-xs text-gray-400">
-            Built with ❤️ for keyboard enthusiasts
-          </p>
+          {/* Right Column: Dynamic Copyright */}
+          <div className="text-[11.5px] text-gray-400 font-bold tracking-wide text-center md:text-right cursor-default">
+            © {new Date().getFullYear()} Infant Ashil A
+          </div>
+
         </div>
       </div>
     </footer>
