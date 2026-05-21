@@ -83,10 +83,11 @@ export default function TypingArea({ text, onComplete, onStats }) {
       setStartTime(Date.now())
     }
 
+    const expected = words[currentWordIndex] || ''
+
     // Space pressed — submit current word
     if (val.endsWith(' ')) {
       const typed = val.trim()
-      const expected = words[currentWordIndex]
 
       if (typed !== expected) {
         // Wrong word → reset current test
@@ -117,8 +118,20 @@ export default function TypingArea({ text, onComplete, onStats }) {
       return
     }
 
+    // Character-level mistake check:
+    // If the typed input doesn't match the prefix of the expected word, it's a mistake!
+    if (!expected.startsWith(val)) {
+      setMistakes((m) => m + 1)
+      setWrongWord(true)
+      setCurrentInput(val)
+      setTimeout(() => {
+        resetTest()
+      }, 600)
+      return
+    }
+
     setCurrentInput(val)
-  }, [isStarted, currentWordIndex, words])
+  }, [isStarted, currentWordIndex, words, resetTest, finishTest])
 
   const resetTest = useCallback(() => {
     setTypedWords([])
