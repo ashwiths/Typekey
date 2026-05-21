@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f7f7f5;
+    color: #1a1a1a;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: #eeaf86;
+    color: #fff;
+  }
+}
+
+@layer components {
+  /* Glassmorphism card */
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-md border border-white/60 rounded-3xl shadow-soft;
+  }
+
+  /* Premium button */
+  .btn-primary {
+    @apply bg-peach-500 text-white font-semibold px-6 py-3 rounded-2xl
+           shadow-peach transition-all duration-300
+           hover:bg-peach-600 hover:shadow-lg hover:-translate-y-0.5
+           active:translate-y-0 active:shadow-peach;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-peach-600 font-semibold px-6 py-3 rounded-2xl
+           border border-peach-200 shadow-soft transition-all duration-300
+           hover:bg-peach-50 hover:border-peach-300 hover:-translate-y-0.5
+           active:translate-y-0;
+  }
+
+  /* Typing correct/wrong/cursor */
+  .char-correct {
+    @apply text-emerald-500;
+  }
+  .char-wrong {
+    @apply text-red-400;
+  }
+  .char-cursor {
+    @apply relative;
+  }
+  .char-cursor::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-0.5 bg-peach-500 rounded-full;
+    animation: blink 1s step-end infinite;
+  }
+  .char-pending {
+    @apply text-gray-400;
+  }
+
+  /* Stats bar badge */
+  .stat-badge {
+    @apply flex flex-col items-center bg-white rounded-2xl shadow-soft px-5 py-3;
+  }
+
+  /* Scrollbar */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Blink cursor animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Keyboard key styles */
+.key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #e8e3dc;
+  box-shadow: 0 2px 0 #cfc8be, 0 2px 4px rgba(0,0,0,0.06);
+  font-size: 11px;
+  font-weight: 500;
+  color: #555;
+  cursor: default;
+  transition: all 0.1s ease;
+  user-select: none;
+  font-family: 'Inter', sans-serif;
+}
+
+.key.active {
+  background: #d4693a;
+  color: #fff;
+  border-color: #b84f2a;
+  box-shadow: 0 1px 0 #963c22, 0 1px 2px rgba(0,0,0,0.1);
+  transform: translateY(1px);
+}
+
+.key.next-key {
+  background: #faeadb;
+  border-color: #eeaf86;
+  color: #d4693a;
+  box-shadow: 0 2px 0 #eeaf86, 0 2px 4px rgba(212,105,58,0.15);
+}
+
+/* Page transition wrapper */
+.page-wrapper {
+  min-height: 100vh;
+  background-color: #f7f7f5;
+}
