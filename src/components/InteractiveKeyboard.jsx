@@ -46,9 +46,9 @@ function normalizeKey(key) {
   return key.length === 1 ? key.toLowerCase() : key
 }
 
-const UNIT = 44
-const KEY_H = 44
-const GAP = 5
+const UNIT = 42
+const KEY_H = 40
+const GAP = 2.5
 
 function Key({ keyData, isPressed, isHomeRow, isNext, isCorrect, isWrong }) {
   const width = keyData.w * UNIT
@@ -77,8 +77,8 @@ function Key({ keyData, isPressed, isHomeRow, isNext, isCorrect, isWrong }) {
       } : {}}
       animate={
         isPressed ? { y: 3, scale: 0.91 }
-        : isWrong ? { x: [-4, 4, -3, 3, 0] }
-        : { y: 0, scale: 1 }
+          : isWrong ? { x: [-4, 4, -3, 3, 0] }
+            : { y: 0, scale: 1 }
       }
       transition={
         isWrong
@@ -110,16 +110,16 @@ function Key({ keyData, isPressed, isHomeRow, isNext, isCorrect, isWrong }) {
 }
 
 export default function InteractiveKeyboard() {
-  const [pressedKeys,  setPressedKeys]  = useState(new Set())
-  const [wrongKeys,    setWrongKeys]    = useState(new Set())
-  const [correctKeys,  setCorrectKeys]  = useState(new Set())
-  const [seqIdx,       setSeqIdx]       = useState(0)
+  const [pressedKeys, setPressedKeys] = useState(new Set())
+  const [wrongKeys, setWrongKeys] = useState(new Set())
+  const [correctKeys, setCorrectKeys] = useState(new Set())
+  const [seqIdx, setSeqIdx] = useState(0)
   const [completedSet, setCompletedSet] = useState(new Set())
   const [trainingDone, setTrainingDone] = useState(false)
-  const [keyCount,     setKeyCount]     = useState(0)
-  const [errorCount,   setErrorCount]   = useState(0)
-  const [elapsed,      setElapsed]      = useState(0)
-  const [started,      setStarted]      = useState(false)
+  const [keyCount, setKeyCount] = useState(0)
+  const [errorCount, setErrorCount] = useState(0)
+  const [elapsed, setElapsed] = useState(0)
+  const [started, setStarted] = useState(false)
   const startRef = useRef(null)
   const timerRef = useRef(null)
 
@@ -194,14 +194,14 @@ export default function InteractiveKeyboard() {
     >
       {/* Premium ambient radial glow strictly behind the card */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-peach-200/40 via-peach-100/10 to-transparent blur-3xl opacity-80 pointer-events-none -z-10 transition-opacity duration-1000 group-hover:opacity-100" />
-      
+
       {/* Floating animation wrapper for the whole card */}
       <motion.div
         animate={{ y: [-3, 3, -3] }}
         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
       >
         {/* Layered Glassmorphism Card */}
-        <div className="relative bg-white/65 backdrop-blur-3xl border border-white/90 rounded-[2.5rem] shadow-[0_28px_72px_-12px_rgba(212,105,58,0.14),0_8px_24px_-4px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.95),inset_0_-1px_8px_rgba(255,255,255,0.5)] p-7 flex flex-col gap-6 overflow-hidden">
+        <div className="relative bg-white/65 backdrop-blur-3xl border border-white/90 rounded-[2.5rem] shadow-[0_28px_72px_-12px_rgba(212,105,58,0.14),0_8px_24px_-4px_rgba(0,0,0,0.04),inset_0_2px_4px_rgba(255,255,255,0.95),inset_0_-1px_8px_rgba(255,255,255,0.5)] px-7 pt-7 pb-5 flex flex-col gap-3.5 overflow-hidden">
           
           {/* Soft inner glow reflection inside the card */}
           <div className="absolute -top-24 -left-24 w-64 h-64 bg-white/60 rounded-full blur-[60px] pointer-events-none" />
@@ -213,8 +213,8 @@ export default function InteractiveKeyboard() {
               { icon: <FiTarget className="w-4 h-4 text-emerald-500" />, val: `${accuracy}%`, lbl: 'Accuracy' },
               { icon: <HiOutlineClock className="w-4 h-4 text-amber-500" />, val: `${mm}:${ss}`, lbl: 'Time' },
             ].map(({ icon, val, lbl }) => (
-              <motion.div 
-                key={lbl} 
+              <motion.div
+                key={lbl}
                 whileHover={{ y: -2, scale: 1.02 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 className="flex-1 flex flex-col items-center gap-1.5 py-3.5 bg-white/70 backdrop-blur-lg rounded-2xl border border-white shadow-[0_6px_16px_rgba(0,0,0,0.03),inset_0_1px_2px_rgba(255,255,255,1)]"
@@ -234,9 +234,9 @@ export default function InteractiveKeyboard() {
           </div>
 
           {/* ── Keyboard ── */}
-          <div className="relative space-y-[5px] z-10">
+          <div className="relative space-y-[2.5px] z-10">
             {ROWS.map((row, ri) => (
-              <div key={ri} className="flex gap-[5px] justify-center">
+              <div key={ri} className="flex gap-[2.5px] justify-center">
                 {row.map((keyData) => (
                   <Key
                     key={keyData.id}
@@ -252,16 +252,15 @@ export default function InteractiveKeyboard() {
             ))}
 
             {/* Spacebar */}
-            <div className="flex justify-center pt-1.5">
+            <div className="flex justify-center pt-[2.5px]">
               <motion.div
                 whileHover={!pressedKeys.has(' ') ? { y: -1.5, scale: 1.02, boxShadow: '0 8px 16px rgba(0,0,0,0.04)' } : {}}
                 animate={pressedKeys.has(' ') ? { y: 2.5, scale: 0.95, boxShadow: 'inset 0 4px 10px rgba(0,0,0,0.15)' } : { y: 0, scale: 1 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 25, mass: 0.8 }}
-                className={`h-[42px] rounded-xl border text-[12px] font-bold tracking-wide flex items-center justify-center transition-colors duration-200 ${
-                  pressedKeys.has(' ')
+                className={`h-[38px] rounded-xl border text-[12px] font-bold tracking-wide flex items-center justify-center transition-colors duration-200 ${pressedKeys.has(' ')
                     ? 'bg-gradient-to-b from-peach-400 to-peach-500 border-peach-600 text-white shadow-[0_0_16px_rgba(212,105,58,0.45)]'
                     : 'bg-white border-gray-200/60 text-gray-400 shadow-[0_2px_0_#d4d4d8,0_6px_12px_rgba(0,0,0,0.02)]'
-                }`}
+                  }`}
                 style={{ width: UNIT * 5 + GAP * 4 }}
               >
                 SPACE
@@ -270,7 +269,7 @@ export default function InteractiveKeyboard() {
           </div>
 
           {/* ── Sequence hint ── */}
-          <div className="relative flex flex-col items-center gap-3 pt-3 z-10">
+          <div className="relative flex flex-col items-center gap-1.5 pt-1.5 mt-0.5 z-10">
             <div className="flex items-center gap-1.5">
               {HOME_SEQUENCE.map((k, i) => {
                 const done = completedSet.has(i)
@@ -280,11 +279,10 @@ export default function InteractiveKeyboard() {
                     key={k}
                     animate={cur ? { scale: [1, 1.15, 1], rotate: [0, 3, -3, 0] } : {}}
                     transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-                    className={`w-[30px] h-[30px] rounded-[10px] flex items-center justify-center text-[11px] font-bold border transition-all duration-300 ${
-                      done  ? 'bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-300 text-emerald-600 shadow-[0_2px_8px_rgba(16,185,129,0.15)]'
-                      : cur ? 'bg-gradient-to-br from-peach-50 to-peach-100 border-peach-300 text-peach-600 shadow-[0_4px_12px_rgba(212,105,58,0.3)]'
-                      :       'bg-gray-50/60 border-gray-200/60 text-gray-400'
-                    }`}
+                    className={`w-[30px] h-[30px] rounded-[10px] flex items-center justify-center text-[11px] font-bold border transition-all duration-300 ${done ? 'bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-300 text-emerald-600 shadow-[0_2px_8px_rgba(16,185,129,0.15)]'
+                        : cur ? 'bg-gradient-to-br from-peach-50 to-peach-100 border-peach-300 text-peach-600 shadow-[0_4px_12px_rgba(212,105,58,0.3)]'
+                          : 'bg-gray-50/60 border-gray-200/60 text-gray-400'
+                      }`}
                   >
                     {k.toUpperCase()}
                   </motion.span>
@@ -292,7 +290,7 @@ export default function InteractiveKeyboard() {
               })}
             </div>
             <AnimatePresence mode="wait">
-              <motion.p 
+              <motion.p
                 key={trainingDone ? 'done' : seqIdx}
                 initial={{ opacity: 0, y: 3 }}
                 animate={{ opacity: 1, y: 0 }}

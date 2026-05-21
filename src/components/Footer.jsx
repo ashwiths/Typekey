@@ -13,9 +13,14 @@ export default function Footer() {
           
           {/* Left Column: Signature & Greeting */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <h4 className="font-['Caveat'] text-[30px] font-bold text-[#c03473] leading-none mb-1 cursor-default hover:scale-105 transition-transform duration-300">
+            <a
+              href="https://ashil.space"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-['Caveat'] text-[30px] font-bold text-[#c03473] leading-none mb-1 cursor-pointer block hover:scale-105 hover:opacity-90 transition-all duration-300"
+            >
               Infant Ashil A
-            </h4>
+            </a>
             <p className="text-[11.5px] text-gray-500 font-medium tracking-wide flex items-center gap-1">
               Made with <span className="text-[#c03473]">♡</span> and a lot of <span className="text-sm">☕</span>
             </p>

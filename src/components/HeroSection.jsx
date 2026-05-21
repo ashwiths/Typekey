@@ -45,7 +45,7 @@ export default function HeroSection() {
   const ordinalWord = ORDINAL_WORDS[nextTestId] || 'First'
 
   return (
-    <section className="relative min-h-[78vh] flex items-center pt-14 pb-20 overflow-hidden">
+    <section className="relative min-h-[78vh] flex items-center pt-14 pb-32 overflow-hidden">
       
       {/* ── Premium Background Lighting ── */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-white via-[#fcfbf9] to-[#f7f7f5] -z-20" />
@@ -181,7 +181,7 @@ export default function HeroSection() {
       </div>
       
       {/* ── Soft blur transition into the next section ── */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#f7f7f5] via-[#f7f7f5]/80 to-transparent z-20 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#f7f7f5] via-[#f7f7f5]/80 to-transparent z-10 pointer-events-none" />
       
     </section>
   )

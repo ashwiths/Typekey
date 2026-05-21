@@ -37,8 +37,8 @@ const KEYBOARD_ROWS = [
   ]
 ]
 
-const KEY_UNIT = 48
-const KEY_H = 46
+const KEY_UNIT = 44
+const KEY_H = 40
 
 export default function KeyboardVisualizer({ pressedKey = '', nextKey = '' }) {
   const normalizedNext = useMemo(() => {
@@ -93,10 +93,10 @@ export default function KeyboardVisualizer({ pressedKey = '', nextKey = '' }) {
 
   return (
     <div className="w-full overflow-x-auto scrollbar-hide py-1">
-      <div className="min-w-[680px] max-w-[760px] mx-auto bg-gradient-to-b from-white/90 to-gray-50/50 backdrop-blur-2xl rounded-4xl border border-gray-100/80 shadow-[0_12px_45px_rgba(0,0,0,0.04),inset_0_1.5px_0_rgba(255,255,255,1)] p-6 space-y-2">
+      <div className="min-w-[680px] max-w-[760px] mx-auto bg-gradient-to-b from-white/90 to-gray-50/50 backdrop-blur-2xl rounded-4xl border border-gray-100/80 shadow-[0_12px_45px_rgba(0,0,0,0.04),inset_0_1.5px_0_rgba(255,255,255,1)] p-5 space-y-[4.5px]">
         
         {KEYBOARD_ROWS.map((row, rowIdx) => (
-          <div key={rowIdx} className="flex gap-1.5 justify-center">
+          <div key={rowIdx} className="flex gap-[4.5px] justify-center">
             {row.map((item) => {
               const { cls, isPressed, isNext } = getKeyStyles(item)
               const width = item.w * KEY_UNIT
@@ -141,7 +141,7 @@ export default function KeyboardVisualizer({ pressedKey = '', nextKey = '' }) {
         ))}
 
         {/* Premium Legend */}
-        <div className="flex gap-6 justify-center pt-3 border-t border-gray-100/60 mt-1">
+        <div className="flex gap-6 justify-center pt-2.5 border-t border-gray-100/50 mt-0.5">
           <div className="flex items-center gap-2">
             <span className="w-5 h-5 rounded-lg bg-gradient-to-b from-peach-400 to-peach-500 border border-peach-600 shadow-sm flex items-center justify-center text-[10px] text-white font-bold">↵</span>
             <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Pressed key</span>
