@@ -3,6 +3,25 @@ import { motion } from 'framer-motion'
 import { BsLightningChargeFill, BsStarFill } from 'react-icons/bs'
 import { FiArrowRight, FiGrid, FiActivity } from 'react-icons/fi'
 import InteractiveKeyboard from './InteractiveKeyboard'
+import { useProgress } from '../hooks/useProgress'
+
+const ORDINAL_WORDS = {
+  1: 'First',
+  2: 'Second',
+  3: 'Third',
+  4: 'Fourth',
+  5: 'Fifth',
+  6: 'Sixth',
+  7: 'Seventh',
+  8: 'Eighth',
+  9: 'Ninth',
+  10: 'Tenth',
+  11: 'Eleventh',
+  12: 'Twelfth',
+  13: 'Thirteenth',
+  14: 'Fourteenth',
+  15: 'Fifteenth',
+}
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 30 },
@@ -12,6 +31,18 @@ const fadeUp = (delay = 0) => ({
 
 export default function HeroSection() {
   const navigate = useNavigate()
+  const { progress } = useProgress()
+
+  const completedIds = progress?.completedTests || []
+  let nextTestId = 1
+  for (let i = 1; i <= 15; i++) {
+    if (!completedIds.includes(i)) {
+      nextTestId = i
+      break
+    }
+  }
+
+  const ordinalWord = ORDINAL_WORDS[nextTestId] || 'First'
 
   return (
     <section className="relative min-h-[78vh] flex items-center pt-14 pb-20 overflow-hidden">
@@ -61,13 +92,13 @@ export default function HeroSection() {
 
             <motion.div {...fadeUp(0.3)} className="flex flex-wrap gap-4 mb-10">
               <motion.button
-                onClick={() => navigate('/test/1')}
+                onClick={() => navigate(`/test/${nextTestId}`)}
                 whileHover={{ y: -2, scale: 1.02, boxShadow: '0 12px 30px -4px rgba(212,105,58,0.4), inset 0 1px 0 rgba(255,255,255,0.3)' }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 className="flex items-center justify-center gap-2.5 text-[16px] px-9 py-4 w-full sm:w-auto font-bold text-white bg-gradient-to-b from-peach-400 to-peach-500 border border-peach-500 rounded-2xl shadow-[0_4px_12px_rgba(212,105,58,0.25)]"
               >
-                Start Your First Test <FiArrowRight className="w-4.5 h-4.5 ml-0.5" />
+                Start Your {ordinalWord} Test <FiArrowRight className="w-4.5 h-4.5 ml-0.5" />
               </motion.button>
               
               <motion.button
