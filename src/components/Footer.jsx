@@ -3,10 +3,10 @@ import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi'
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-[#f6f3fc]/90 border-t border-[#ebdffc]/50 py-10 relative overflow-hidden">
+    <footer className="w-full bg-warm-50/95 border-t border-peach-200/30 py-10 relative overflow-hidden">
       {/* Decorative subtle ambient lights */}
-      <div className="absolute -bottom-10 left-1/4 w-[250px] h-[100px] bg-purple-200/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -top-10 right-1/4 w-[200px] h-[80px] bg-indigo-200/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-10 left-1/4 w-[250px] h-[100px] bg-peach-100/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-10 right-1/4 w-[200px] h-[80px] bg-warm-100/25 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
@@ -56,7 +56,7 @@ export default function Footer() {
                 aria-label={label}
                 whileHover={{ y: -3, scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
-                className={`w-11 h-11 rounded-full bg-white border border-[#e8dffc] shadow-[0_4px_12px_rgba(156,117,240,0.08)] flex items-center justify-center text-gray-500 transition-all duration-300 ${color}`}
+                className={`w-11 h-11 rounded-full bg-white border border-peach-200/30 shadow-soft flex items-center justify-center text-gray-500 transition-all duration-300 ${color}`}
               >
                 {icon}
               </motion.a>
